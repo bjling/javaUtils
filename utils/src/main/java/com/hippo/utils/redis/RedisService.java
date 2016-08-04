@@ -20,7 +20,7 @@ public class RedisService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RedisService.class);
 
-  /** 毫秒与毫微秒的换算单位 1毫秒 = 1000000毫微秒 */
+  /** 纳秒 */
   private static final long MILLI_NANO_CONVERSION = 1000 * 1000L;
 
   /** 默认超时时间（秒） */
@@ -228,7 +228,6 @@ public class RedisService {
   public long del(String key) {
     Jedis jedis = getJedis();
     try {
-
       return jedis.del(key);
     } catch (Exception e) {
       LOGGER.error("redisService del error", e);
