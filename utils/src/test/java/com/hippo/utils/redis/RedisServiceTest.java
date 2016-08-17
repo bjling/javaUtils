@@ -25,6 +25,23 @@ public class RedisServiceTest {
     Thread.sleep(40 * 1000L);
   }
 
+  @Test
+  public void pubsub() throws InterruptedException {
+
+    String channel = "test.channel";
+    Subscriber subscriber = new Subscriber();
+    new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+        redisService.subscribe(subscriber, channel);
+      }
+    }).start();
+    redisService.publish(channel, "asdasdasd");
+    System.out.println("over");
+    Thread.sleep(40 * 1000L);
+  }
+
 }
 
 

@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPubSub;
 
 
 @Service
@@ -319,6 +320,29 @@ public class RedisService {
       jedis.close();
     }
     return null;
+  }
+
+  public Long publish(String channel, String message) {
+    Jedis jedis = getJedis();
+    try {
+      return jedis.publish(channel, message);
+    } catch (Exception e) {
+      LOGGER.error("redisService publish error", e);
+    } finally {
+      jedis.close();
+    }
+    return null;
+  }
+
+  public void subscribe(JedisPubSub jedisPubSub, String... channels) {
+    Jedis jedis = getJedis();
+    try {
+      jedis.subscribe(jedisPubSub, channels);
+    } catch (Exception e) {
+      LOGGER.error("redisService subscribe error", e);
+    } finally {
+      jedis.close();
+    }
   }
 
   /**
