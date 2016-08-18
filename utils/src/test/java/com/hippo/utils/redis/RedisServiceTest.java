@@ -37,6 +37,14 @@ public class RedisServiceTest {
         redisService.subscribe(subscriber, channel);
       }
     }).start();
+    Subscriber subscriber2 = new Subscriber();
+    new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+        redisService.subscribe(subscriber2, channel);
+      }
+    }).start();
     redisService.publish(channel, "asdasdasd");
     System.out.println("over");
     Thread.sleep(40 * 1000L);
