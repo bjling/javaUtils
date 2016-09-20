@@ -5,15 +5,18 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 
-public class RedisService {
+@Service
+public class RedisServiceWithSpring {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RedisService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RedisServiceWithSpring.class);
 
   /** 纳秒 */
   private static final long MILLI_NANO_CONVERSION = 1000 * 1000L;
@@ -23,23 +26,9 @@ public class RedisService {
 
   private ThreadLocal<String> tl = new ThreadLocal<>();
 
-  private static final String REDISHOST = "127.0.0.1";
-
-  private static final int PORT = 6380;
-
-  private static final String PWD = "Redis@123";
-
-  private static JedisPoolConfig config;
-
-  private static JedisPool pool;
-
-  static {
-    config = new JedisPoolConfig();
-    config.setMaxIdle(10);
-    config.setMaxWaitMillis(1000);
-    config.setMaxTotal(30);
-    pool = new JedisPool(config, REDISHOST, PORT, 2000, PWD);
-  }
+  @Autowired(required = false)
+  @Qualifier("jedisConnectionFactory")
+  private JedisConnectionFactory jedisConnectionFactory;
 
   /**
    * 加锁
@@ -77,17 +66,6 @@ public class RedisService {
     return false;
   }
 
-  public long setnx(String key, String value) {
-    Jedis jedis = getJedis();
-    try {
-      return jedis.setnx(key, value);
-    } catch (Exception e) {
-      LOGGER.error("redisService setnx error", e);
-    } finally {
-      jedis.close();
-    }
-    return 0L;
-  }
 
   public void expire(final String key, final int seconds) {
     Jedis jedis = getJedis();
@@ -156,12 +134,26 @@ public class RedisService {
     return 0L;
   }
 
+
+
+  public long setnx(String key, String value) {
+    Jedis jedis = getJedis();
+    try {
+      return jedis.setnx(key, value);
+    } catch (Exception e) {
+      LOGGER.error("redisService setnx error", e);
+    } finally {
+      jedis.close();
+    }
+    return 0L;
+  }
+
   /**
    * 获取一个jedis 客户端
    * 
    * @return
    */
   private Jedis getJedis() {
-    return pool.getResource();
+    return this.jedisConnectionFactory.getConnection().getNativeConnection();
   }
 }
