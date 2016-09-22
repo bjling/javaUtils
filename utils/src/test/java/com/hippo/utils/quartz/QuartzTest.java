@@ -20,11 +20,11 @@ public class QuartzTest {
   @Test
   public void jobTest() throws SchedulerException, InterruptedException {
     ScheduleJob job = new ScheduleJob();
-    job.setJobId(UUID.randomUUID().toString());
     job.setJobName("JobName_" + Thread.currentThread().getId());
     job.setJobGroup("testGroup");
+    job.setClassName("com.hippo.utils.quartz.TestLogic");
+    job.setParamJson("jobId:123213");
     job.setCronExpression("0/3 * * * * ?");
-    job.setDesc("new job");
     QuartzUtils.addJob(schedulerFactoryBean.getScheduler(), job);
     Thread.sleep(10 * 1000L);
     QuartzUtils.pauseJob(schedulerFactoryBean.getScheduler(), job);

@@ -14,7 +14,6 @@ public class ScheduleJob implements Serializable {
    */
   private static final long serialVersionUID = -4413184861297738625L;
 
-  private String jobId;
 
   private String jobName;
 
@@ -22,14 +21,26 @@ public class ScheduleJob implements Serializable {
 
   private String cronExpression;
 
-  private String desc;
+  private String className;
 
-  public String getJobId() {
-    return jobId;
+  private String paramJson;
+
+
+
+  public String getClassName() {
+    return className;
   }
 
-  public void setJobId(String jobId) {
-    this.jobId = jobId;
+  public void setClassName(String className) {
+    this.className = className;
+  }
+
+  public String getParamJson() {
+    return paramJson;
+  }
+
+  public void setParamJson(String paramJson) {
+    this.paramJson = paramJson;
   }
 
   public String getJobName() {
@@ -54,14 +65,6 @@ public class ScheduleJob implements Serializable {
 
   public void setCronExpression(String cronExpression) {
     this.cronExpression = cronExpression;
-  }
-
-  public String getDesc() {
-    return desc;
-  }
-
-  public void setDesc(String desc) {
-    this.desc = desc;
   }
 
 
