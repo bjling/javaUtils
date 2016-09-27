@@ -1,7 +1,5 @@
 package com.hippo.utils.quartz;
 
-import java.util.UUID;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
