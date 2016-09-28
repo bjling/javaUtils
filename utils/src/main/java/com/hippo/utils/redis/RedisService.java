@@ -58,7 +58,8 @@ public class RedisService {
       int expire = (int) (timeout / 1000 + 1);
       while ((temp = (timeout * MILLI_NANO_CONVERSION) - (System.nanoTime() - nano)) > 0) {
         if (this.setnx(key, String.valueOf(System.nanoTime())) == 1) {
-          this.expire(key, expire);
+          Jedis jedis = getJedis();
+          jedis.expire(key, expire);
           tl.set(key);
           return true;
         }
